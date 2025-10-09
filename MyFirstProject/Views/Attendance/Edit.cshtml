@@ -1,0 +1,64 @@
+﻿@model Attendance
+@{
+    ViewData["Title"] = "Edit Attendance";
+}
+
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-warning">
+        <div class="card-header bg-warning text-white">
+            <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Attendance</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-action="Edit">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="AttendanceId" />
+                <input type="hidden" asp-for="Uid" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="EmployeesId" class="form-label">Select Employee</label>
+                        <select asp-for="EmployeesId" class="form-select" asp-items="ViewBag.EmployeesList" disabled>
+                            <option value="" disabled>Select Employee</option >
+                        </select>
+                        <span asp-validation-for="EmployeesId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="Date" class="form-label">Date</label>
+                        <input type="date" asp-for="Date" class="form-control" readonly />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="CheckInTime" class="form-label">Check In Time</label>
+                        <input type="time" asp-for="CheckInTime" class="form-control" readonly />
+                        <span asp-validation-for="CheckInTime" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="CheckOutTime" class="form-label">Check Out Time</label>
+                        <input type="time" asp-for="CheckOutTime" class="form-control" />
+                        <span asp-validation-for="CheckOutTime" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Status" class="form-label">Status</label>
+                    <input type="text" value="@(Model?.Status ?? "")" class="form-control" readonly />
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-warning text-white">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

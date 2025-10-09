@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Jobs>
+@{
+    ViewData["Title"] = "Jobs";
+}
+
+<h1 class="mb-4">Jobs</h1>
+
+<div class="text-end mb-3">
+    <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered table-hover table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="fw-semibold">Job ID</th>
+                    <th class="fw-semibold">Job Name</th>
+                    <th class="fw-semibold">Department Name</th>
+                    <th class="text-center fw-semibold">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td>@job.Id</td>
+                        <td>@job.JobName</td>
+                        <td>@job.department?.DepartmentName</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-Uid="@job.Uid" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-Uid="@job.Uid" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

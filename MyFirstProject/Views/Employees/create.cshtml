@@ -1,0 +1,91 @@
+﻿@model Employees
+@{
+    ViewData["Title"] = "Create Employee";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i> Create Employee</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-action="Create">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="Name" class="form-label">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Enter full name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="NationalID" class="form-label">National ID</label>
+                        <input type="number" asp-for="NationalID" class="form-control" placeholder="Enter national ID">
+                        <span asp-validation-for="NationalID" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input type="number" asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="Password" class="form-label">Password</label>
+                        <input type="text" asp-for="Password" class="form-control" placeholder="Enter password">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="email" asp-for="Email" class="form-control" placeholder="Enter email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="Address" class="form-label">Address</label>
+                        <input type="text" asp-for="Address" class="form-control" placeholder="Enter address">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="JoiningDate" class="form-label">Joining Date</label>
+                        <input type="date" asp-for="JoiningDate" class="form-control">
+                        <span asp-validation-for="JoiningDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="JobsId" class="form-label">Job</label>
+                        <select asp-for="JobsId" class="form-select" asp-items="@ViewBag.JobsList">
+                            <option value="" disabled selected>Select Job</option>
+                        </select>
+                        <span asp-validation-for="JobsId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="CityId" class="form-label">City</label>
+                        <select asp-for="CityId" class="form-select" asp-items="@ViewBag.CityList">
+                            <option value="" disabled selected>Select City</option>
+                        </select>
+                        <span asp-validation-for="CityId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="EmployeeStatusId" class="form-label">Status</label>
+                        <select asp-for="EmployeeStatusId" class="form-select" asp-items="@ViewBag.empStatusList">
+                            <option value="" disabled selected>Select Status</option>
+                        </select>
+                        <span asp-validation-for="EmployeeStatusId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

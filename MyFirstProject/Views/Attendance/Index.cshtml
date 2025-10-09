@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Attendance>
+@{
+    ViewData["Title"] = "Attendance";
+}
+
+<h1 class="mb-4">Attendance</h1>
+
+<div class="text-end mb-3">
+    <a asp-controller="Attendance" asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered table-hover table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="fw-semibold">Attendance ID</th>
+                    <th class="fw-semibold">Employee Name</th>
+                    <th class="fw-semibold">Date</th>
+                    <th class="fw-semibold">Check In</th>
+                    <th class="fw-semibold">Check Out</th>
+                    <th class="fw-semibold">Status</th>
+                    <th class="text-center fw-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var atten in Model)
+                {
+                    <tr>
+                        <td>@atten.AttendanceId</td>
+                        <td>@atten.employees?.Name</td>
+                        <td>@atten.Date.ToShortDateString()</td>
+                        <td>@atten.CheckInTime</td>
+                        <td>@atten.CheckOutTime</td>
+                        <td>
+                            @if (atten.Status == "Present")
+                            {
+                                <span class="badge bg-success">Present</span>
+                            }
+                            else if (atten.Status == "Absent")
+                            {
+                                <span class="badge bg-danger">Absent</span>
+                            }
+                            else if (atten.Status == "Late")
+                            {
+                                <span class="badge bg-warning text-dark">Late</span>
+                            }
+                            else
+                            {
+                                @atten.Status
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-Uid="@atten.Uid" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
