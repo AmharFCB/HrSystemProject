@@ -26,6 +26,7 @@
                     <th class="fw-semibold">Joining Date</th>
                     <th class="fw-semibold">Job</th>
                     <th class="fw-semibold">City</th>
+                    <th class="fw-semibold">Type</th>
                     <th class="fw-semibold">Status</th>
                     <th class="text-center fw-semibold">Action</th>
                 </tr>
@@ -44,6 +45,11 @@
                         <td>@emp.JoiningDate.ToShortDateString()</td>
                         <td>@emp.jobs?.JobName</td>
                         <td>@emp.city?.CityName</td>
+                        <td>
+                            @(emp.TypeUser == 1 ? "Administrator"
+                             : emp.TypeUser == 2 ? "Human Resources"
+                             : "Employee")
+                    </td>
                         <td>@emp.EmployeeStatus?.StatusName</td>
                         <td class="text-center">
                             <a asp-action="Edit" asp-route-Uid="@emp.Uid" class="btn btn-sm btn-outline-primary me-1">

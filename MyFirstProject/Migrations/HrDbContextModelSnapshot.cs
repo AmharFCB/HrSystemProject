@@ -154,6 +154,9 @@ namespace MyFirstProject.Migrations
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("TypeUser")
+                        .HasColumnType("int");
+
                     b.Property<string>("Uid")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -202,6 +205,9 @@ namespace MyFirstProject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaveID"));
+
+                    b.Property<string>("AttachmentPath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EmployeesId")
                         .HasColumnType("int");

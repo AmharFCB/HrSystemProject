@@ -9,7 +9,7 @@
             <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Leave Request</h5>
         </div>
         <div class="card-body">
-            <form method="post" asp-action="Edit">
+            <form method="post" asp-action="Edit" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Uid" />
                 <input type="hidden" asp-for="LeaveID" />
@@ -52,6 +52,18 @@
                         <input type="number" asp-for="LeaveDays" class="form-control" />
                         <span asp-validation-for="LeaveDays" class="text-danger"></span>
                     </div>
+                    <div class="mb-3">
+                        <label for="AttachmentFile" class="form-label">Attachment (PDF)</label>
+                        <input type="file" asp-for="AttachmentFile" class="form-control" accept=".pdf" />
+                        <span asp-validation-for="AttachmentFile" class="text-danger"></span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.AttachmentPath))
+                    {
+                        <p>
+                            المرفق الحالي:
+                            <a href="@Model.AttachmentPath" target="_blank">عرض الملف</a>
+                        </p>
+                    }
 
                     <div class="col-md-6 mb-3">
                         <label for="Status" class="form-label">Status</label>

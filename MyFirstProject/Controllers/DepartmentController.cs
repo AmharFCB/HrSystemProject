@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MyFirstProject.Data;
 using MyFirstProject.Filters;
 using MyFirstProject.Interfaces;
+using MyFirstProject.Interfaces.IServices;
 using MyFirstProject.Models;
+using MyFirstProject.Services;
 
 namespace MyFirstProject.Controllers
 {
@@ -12,23 +14,21 @@ namespace MyFirstProject.Controllers
 
     public class DepartmentController : Controller
     {
-        private readonly HrDbContext _context;
-        private readonly IRepository<Department> _DepartmentRepository;
+        private readonly IDepartmentsServices DepartmentsServices;
 
-        public DepartmentController(HrDbContext context,IRepository<Department> repository)
-        { 
-            _DepartmentRepository = repository;
-            _context = context; 
+        public DepartmentController( IDepartmentsServices departmentsServices)
+        {
+            DepartmentsServices = departmentsServices;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Department> departments = _context.Departments.Include(e=>e.employees).ToList();
+            IEnumerable<Department> departments = DepartmentsServices.GetAll();
             return View(departments);
         }
         private void CreateManager(int selected = 0)
         {
-            IEnumerable<Employees> employees = _context.Employees.ToList();
+            IEnumerable<Employees> employees = DepartmentsServices.GetEmployees();
             SelectList selectListItems = new SelectList(employees, "Id", "Name", selected);
             ViewBag.EmployeesList = selectListItems;
         }
@@ -50,7 +50,7 @@ namespace MyFirstProject.Controllers
                     CreateManager();
                     return View(department);
                 }
-                _DepartmentRepository.Add(department);
+                DepartmentsServices.Create(department);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace MyFirstProject.Controllers
         [HttpGet]
         public IActionResult Edit(string Uid)
         {
-            var department = _DepartmentRepository.GetByUid(Uid);
+            var department = DepartmentsServices.GetByUid(Uid);
             CreateManager();
             return View(department);
         }
@@ -80,7 +80,7 @@ namespace MyFirstProject.Controllers
                     CreateManager();
                     return View(department);
                 }
-                _DepartmentRepository.Update(department);
+                DepartmentsServices.Update(department);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace MyFirstProject.Controllers
         [HttpGet]
         public IActionResult Delete(string Uid)
         {
-            var department = _DepartmentRepository.GetByUid(Uid);
+            var department = DepartmentsServices.GetByUid(Uid);
             return View(department);
         }
 
@@ -103,11 +103,7 @@ namespace MyFirstProject.Controllers
         [HttpPost]
         public IActionResult PostDelete(string Uid)
         {
-            var department = _DepartmentRepository.GetByUid(Uid);
-            if (department != null)
-            {
-                _DepartmentRepository.Delete(department.Id);
-            }
+            DepartmentsServices.DeleteByUid(Uid);
             return RedirectToAction(nameof(Index));
         }
     }

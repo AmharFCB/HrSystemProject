@@ -4,70 +4,72 @@ using Microsoft.EntityFrameworkCore;
 using MyFirstProject.Data;
 using MyFirstProject.Filters;
 using MyFirstProject.Interfaces;
+using MyFirstProject.Interfaces.IServices;
 using MyFirstProject.Models;
+using MyFirstProject.Services;
 
 namespace MyFirstProject.Controllers
 {
     [SessionAuthorize]
     public class AttendanceController : Controller
     {
-        private readonly HrDbContext _context;
-        private readonly IRepository<Attendance> _AttendanceRepository;
+        private readonly IAttendanceServices AttendanceServices;
 
-        public AttendanceController(HrDbContext context , IRepository<Attendance> repository) 
+        public AttendanceController(IAttendanceServices attendanceServices)
         {
-            _AttendanceRepository = repository;
-            _context = context; 
+            AttendanceServices = attendanceServices;
         }
+
+
 
         public IActionResult Index()
         {
-            IEnumerable<Attendance> attendances = _context.Attendances.Include(e => e.employees).ToList();
+            IEnumerable<Attendance> attendances = AttendanceServices.GetAll();
             return View(attendances);
         }
 
         private void CreateEmployees(int selected = 0)
         {
-            IEnumerable<Employees> employees = _context.Employees.ToList();
+            IEnumerable<Employees> employees = AttendanceServices.GetEmployees();
             SelectList selectListItems = new SelectList(employees, "Id", "Name", selected);
             ViewBag.EmployeesList = selectListItems;
         }
 
-        public IActionResult create()
-        {
-           
-            CreateEmployees();
-            return View();
-        }
+        //public IActionResult create()
+        //{
 
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public IActionResult create(Attendance attendance)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    
-                    CreateEmployees();
-                    return View(attendance);
-                }
+        //    CreateEmployees();
+        //    return View();
+        //}
 
-                _AttendanceRepository.Add(attendance);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return Content("حدث  خطا غير متوقع يرجي الاتصال بالدعم الفني.");
-            }
-        }
+        //[ValidateAntiForgeryToken]
+        //[HttpPost]
+        //public IActionResult create(Attendance attendance)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+
+        //            CreateEmployees();
+        //            return View(attendance);
+        //        }
+
+        //        AttendanceServices.Create(attendance);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return Content("حدث  خطا غير متوقع يرجي الاتصال بالدعم الفني.");
+        //    }
+        //}
 
 
         [HttpGet]
         public IActionResult Edit(string Uid)
         {
-           var attendance =  _AttendanceRepository.GetByUid(Uid);
+            var attendance = AttendanceServices.GetByUid(Uid);
             CreateEmployees();
             return View(attendance);
         }
@@ -77,48 +79,59 @@ namespace MyFirstProject.Controllers
         public IActionResult Edit(Attendance attendance)
         {
 
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    
-                    CreateEmployees();
+                CreateEmployees();
 
-                    return View(attendance);
-                }
-                _AttendanceRepository.Update(attendance);
-                return RedirectToAction(nameof(Index));
+                return View(attendance);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-
-                return Content("حدث  خطا غير متوقع يرجي الاتصال بالدعم الفني.");
-
-            }
-        }
-
-        [HttpGet]
-        public IActionResult Delete(string Uid)
-        {
-
-            var attendance = _AttendanceRepository.GetByUid(Uid);
-            return View(attendance);
-        }
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public IActionResult PostDelete(String Uid)
-        {
-            var attendance = _AttendanceRepository.GetByUid(Uid);
-            if (attendance != null)
-            {
-
-                _AttendanceRepository.Delete(attendance.AttendanceId);
-
-            }
-
+            AttendanceServices.Update(attendance);
             return RedirectToAction(nameof(Index));
         }
-    }
+
+
+        
+        //[HttpGet]
+        //public IActionResult Delete(string Uid)
+        //{
+
+        //    var attendance = AttendanceServices.GetByUid(Uid);
+        //    return View(attendance);
+        //}
+        //[ValidateAntiForgeryToken]
+        //[HttpPost]
+        //public IActionResult PostDelete(String Uid)
+        //{
+        //    AttendanceServices.DeleteByUid(Uid);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        public IActionResult CheckIn()
+        {
+            // Get the email of the logged-in user from the session
+            var email = HttpContext.Session.GetString("Email");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Call the CheckIn method from the AttendanceServices
+            AttendanceServices.CheckIn(email);
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult CheckOut()
+        {
+            
+            var email = HttpContext.Session.GetString("Email");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
+            AttendanceServices.CheckOut(email);
+            return RedirectToAction("Index", "Attendance");
+        }
 
     }
+}

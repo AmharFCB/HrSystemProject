@@ -5,11 +5,11 @@
 
 <h1 class="mb-4">Attendance</h1>
 
-<div class="text-end mb-3">
+@* <div class="text-end mb-3">
     <a asp-controller="Attendance" asp-action="Create" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add New
     </a>
-</div>
+</div> *@
 
 <div class="card shadow-sm">
     <div class="card-body">
@@ -22,7 +22,7 @@
                     <th class="fw-semibold">Check In</th>
                     <th class="fw-semibold">Check Out</th>
                     <th class="fw-semibold">Status</th>
-                    <th class="text-center fw-semibold">Actions</th>
+                    @* <th class="text-center fw-semibold">Actions</th> *@
                 </tr>
             </thead>
             <tbody>
@@ -32,8 +32,8 @@
                         <td>@atten.AttendanceId</td>
                         <td>@atten.employees?.Name</td>
                         <td>@atten.Date.ToShortDateString()</td>
-                        <td>@atten.CheckInTime</td>
-                        <td>@atten.CheckOutTime</td>
+                        <td>@atten.CheckInTime?.ToString(@"hh\:mm")</td>
+                        <td>@atten.CheckOutTime?.ToString(@"hh\:mm")</td>
                         <td>
                             @if (atten.Status == "Present")
                             {
@@ -53,9 +53,9 @@
                             }
                         </td>
                         <td class="text-center">
-                            <a asp-action="Edit" asp-route-Uid="@atten.Uid" class="btn btn-sm btn-outline-primary me-1">
+                           @*  <a asp-action="Edit" asp-route-Uid="@atten.Uid" class="btn btn-sm btn-outline-primary me-1">
                                 <i class="fas fa-edit"></i> Edit
-                            </a>
+                            </a> *@
                         </td>
                     </tr>
                 }

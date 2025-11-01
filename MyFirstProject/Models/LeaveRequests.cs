@@ -21,6 +21,10 @@ namespace MyFirstProject.Models
         public int? LeaveTypeId { get; set; }
         public LeaveType? leaveType { get; set; }
         public int LeaveDays { get; set; }
+        [NotMapped]
+        public IFormFile? AttachmentFile { get; set; }
+
+        public string? AttachmentPath { get; set; }
         public string Status { get; set; }
 
     }

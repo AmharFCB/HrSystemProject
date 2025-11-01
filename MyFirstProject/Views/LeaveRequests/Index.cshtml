@@ -24,6 +24,7 @@
                     <th class="fw-semibold">Leave Type</th>
                     <th class="fw-semibold">Leave Days</th>
                     <th class="fw-semibold">Status</th>
+                    <th class="fw-semibold">Attachment</th>
                     <th class="text-center fw-semibold">Action</th>
                 </tr>
             </thead>
@@ -54,6 +55,16 @@
                             else
                             {
                                 @leave.Status
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(leave.AttachmentPath))
+                            {
+                                <a href="@leave.AttachmentPath" target="_blank">View</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No File</span>
                             }
                         </td>
                         <td class="text-center">

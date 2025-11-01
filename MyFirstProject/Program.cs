@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MyFirstProject.Data;
 using MyFirstProject.Repository;
 using MyFirstProject.Interfaces;
+using MyFirstProject.Interfaces.IServices;
+using MyFirstProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
+builder.Services.AddScoped(typeof(IRepositoryAttendance), typeof(RepositoryAttendance));
+builder.Services.AddScoped(typeof(IRepositoryDepartments), typeof(RepositoryDepartments));
+builder.Services.AddScoped(typeof(IRepositoryEmployees), typeof(RepositoryEmployees));
+builder.Services.AddScoped(typeof(IRepositoryJobs), typeof(RepositoryJobs));
+builder.Services.AddScoped(typeof(IRepositoryLeaveRequests), typeof(RepositoryLeaveRequests));
+builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+builder.Services.AddScoped(typeof(IAttendanceServices), typeof(AttendanceServices));
+builder.Services.AddScoped(typeof(IDepartmentsServices), typeof(DepartmentsServices));
+builder.Services.AddScoped(typeof(IEmployeesServices), typeof(EmployeesServices));
+builder.Services.AddScoped(typeof(ILeaveRequestsServices), typeof(LeaveRequestsServices));
 
 builder.Services.AddSession(options =>
 {
@@ -24,6 +36,7 @@ builder.Services.AddDbContext<HrDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 var app = builder.Build();
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

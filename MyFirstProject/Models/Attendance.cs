@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyFirstProject.Models
 {
@@ -15,6 +16,7 @@ namespace MyFirstProject.Models
         public TimeSpan? CheckInTime { get; set; }
 
         public TimeSpan? CheckOutTime { get; set; }
+       
 
         public string Status
         {

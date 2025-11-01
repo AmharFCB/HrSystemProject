@@ -24,7 +24,8 @@ namespace MyFirstProject.Models
         public City? city { get; set; }
 
         [ForeignKey("EmployeeStatus")]
-        public int? EmployeeStatusId { get; set; }   
+        public int? EmployeeStatusId { get; set; }
+        public int TypeUser { get; set; } = 1; // 1 admin 2 hr 3 employee
         public EmployeeStatus? EmployeeStatus { get; set; }
 
     }

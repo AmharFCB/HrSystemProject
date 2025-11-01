@@ -26,11 +26,19 @@ namespace MyFirstProject.Controllers
                 return View(employeesDto);
             }
 
-            var employee = _context.Employees.FirstOrDefault(e => e.Email == employeesDto.Email && e.Password == employeesDto.Password);
-            if (employee != null) {
+            var employee = _context.Employees
+                .FirstOrDefault(e => e.Email == employeesDto.Email && e.Password == employeesDto.Password);
+
+            if (employee != null)
+            {
 
                 HttpContext.Session.SetString("Email", employee.Email);
-                return RedirectToAction("Index", "Home");
+                HttpContext.Session.SetInt32("TypeUser", employee.TypeUser);
+
+                if (employee.TypeUser == 3)
+                    return RedirectToAction("Index", "HomeEmployee");
+                else
+                    return RedirectToAction("Index", "Home");
             }
             return View();
         }

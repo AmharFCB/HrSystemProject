@@ -70,6 +70,18 @@
                         </select>
                         <span asp-validation-for="CityId" class="text-danger"></span>
                     </div>
+                    
+                        <div class="col-md-6 mb-3">
+                            <label for="TypeUser" class="form-label">User Type</label>
+                            <select asp-for="TypeUser" class="form-select">
+                                <option value="1">Administrator</option>
+                                <option value="2">Human Resources</option>
+                                <option value="3">Employee</option>
+                            </select>
+                            <span asp-validation-for="TypeUser" class="text-danger"></span>
+                        </div>
+  
+                    
                     <div class="col-md-6 mb-3">
                         <label for="EmployeeStatusId" class="form-label">Status</label>
                         <select asp-for="EmployeeStatusId" class="form-select" asp-items="@ViewBag.empStatusList">

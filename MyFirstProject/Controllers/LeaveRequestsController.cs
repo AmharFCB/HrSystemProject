@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MyFirstProject.Data;
 using MyFirstProject.Filters;
 using MyFirstProject.Interfaces;
+using MyFirstProject.Interfaces.IServices;
 using MyFirstProject.Models;
+using MyFirstProject.Repository;
 
 namespace MyFirstProject.Controllers
 {
@@ -12,31 +14,30 @@ namespace MyFirstProject.Controllers
 
     public class LeaveRequestsController : Controller
     {
-        private readonly HrDbContext _context;
-        private readonly IRepository<LeaveRequests> _LeaveRequestsRepository;
+        private readonly ILeaveRequestsServices _leaveRequestsServices;
 
-        public LeaveRequestsController(HrDbContext context,IRepository<LeaveRequests> repository)
+
+        public LeaveRequestsController(ILeaveRequestsServices leaveRequestsServices)
         { 
-            _LeaveRequestsRepository = repository;
-            _context = context; 
+            _leaveRequestsServices = leaveRequestsServices;
         }
         public IActionResult Index()
         {
 
-            IEnumerable<LeaveRequests> leaveRequests = _context.LeaveRequestss.Include(e => e.employees).Include(e => e.leaveType).ToList();
-            //IEnumerable<LeaveRequests> LeaveRequests = _context.LeaveRequestss.Include(e => e.leaveType).ToList();
+            IEnumerable<LeaveRequests> leaveRequests = _leaveRequestsServices.GetAll();
+
             return View(leaveRequests);
         }
         private void CreateEmployees(int selected = 0)
         {
-            IEnumerable<Employees> employees = _context.Employees.ToList();
+            IEnumerable<Employees> employees = _leaveRequestsServices.GetEmployees();
             SelectList selectListItems = new SelectList(employees, "Id", "Name", selected);
             ViewBag.EmployeesList = selectListItems;
         }
 
         private void CreateleaveType(int selected = 0)
         {
-            IEnumerable<LeaveType> leaveTypes = _context.leaveTypes.ToList();
+            IEnumerable<LeaveType> leaveTypes = _leaveRequestsServices.GetLeaveTypes();
             SelectList selectListItems = new SelectList(leaveTypes, "Id", "Leavetype", selected);
             ViewBag.leaveTypeList = selectListItems;
         }
@@ -51,7 +52,7 @@ namespace MyFirstProject.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult create(LeaveRequests leaveRequests)
+        public async Task<IActionResult> Create(LeaveRequests leaveRequests)
         {
             try
             {
@@ -61,20 +62,21 @@ namespace MyFirstProject.Controllers
                     CreateEmployees();
                     return View(leaveRequests);
                 }
-                _LeaveRequestsRepository.Add(leaveRequests);
+
+                await _leaveRequestsServices.CreateLeaveRequestAsync(leaveRequests);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return Content("حدث  خطا غير متوقع يرجي الاتصال بالدعم الفني.");
+                return Content("حدث خطأ غير متوقع، يرجى الاتصال بالدعم الفني.");
             }
         }
 
         [HttpGet]
         public IActionResult Edit(string Uid)
         {
-            var leaveRequestss = _LeaveRequestsRepository.GetByUid(Uid);
+            var leaveRequestss =  _leaveRequestsServices.GetByUid(Uid);
             CreateEmployees();
             CreateleaveType();
             return View(leaveRequestss);
@@ -82,27 +84,24 @@ namespace MyFirstProject.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Edit(LeaveRequests leaveRequests)
+        public async Task<IActionResult> Edit(LeaveRequests leaveRequests)
         {
-
             try
             {
                 if (!ModelState.IsValid)
                 {
                     CreateleaveType();
                     CreateEmployees();
-
                     return View(leaveRequests);
                 }
-                _LeaveRequestsRepository.Update(leaveRequests);
+
+                await _leaveRequestsServices.UpdateAsync(leaveRequests);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
-                return Content("حدث  خطا غير متوقع يرجي الاتصال بالدعم الفني.");
-
+                return Content("حدث خطأ غير متوقع، يرجى الاتصال بالدعم الفني.");
             }
         }
 
@@ -110,7 +109,7 @@ namespace MyFirstProject.Controllers
         public IActionResult Delete(string Uid)
         {
 
-            var leaveRequestss = _LeaveRequestsRepository.GetByUid(Uid);
+            var leaveRequestss = _leaveRequestsServices.GetByUid(Uid);
             return View(leaveRequestss);
         }
 
@@ -118,12 +117,9 @@ namespace MyFirstProject.Controllers
         [HttpPost]
         public IActionResult PostDelete(string Uid)
         {
-            var leaveReq = _LeaveRequestsRepository.GetByUid(Uid);
-            if (leaveReq != null)
-            {
-                _LeaveRequestsRepository.Delete(leaveReq.LeaveID);
-            }
+            _leaveRequestsServices.DeleteByUid(Uid);
             return RedirectToAction(nameof(Index));
+
         }
     }
 }
